@@ -88,6 +88,10 @@ class TorrentService extends BaseService<TorrentServiceEvents> {
     return this.torrentListSummary;
   }
 
+  getTorrentListSummaryAsync = () => {
+    return Promise.resolve(this.torrentListSummary);
+  };
+
   handleFetchTorrentListError = () => {
     this.deferFetchTorrentList();
 

@@ -101,7 +101,7 @@ router.get(
   '/',
   async (req, res): Promise<Response> =>
     req.services.torrentService
-      .fetchTorrentList()
+      .getTorrentListSummaryAsync()
       .then((data) => {
         if (data == null) {
           throw new Error();
@@ -166,7 +166,13 @@ router.post<unknown, unknown, AddTorrentByURLOptions>('/add-urls', async (req, r
           return res.status(200).json(response);
         }
       },
-      ({code, message}) => res.status(500).json({code, message}),
+      ({code, message}) => {
+        if (message.includes('hash already used by another')) {
+          return res.status(202);
+        } else {
+          return res.status(500).json({code, message});
+        }
+      },
     );
 });
 
@@ -223,7 +229,13 @@ router.post<unknown, unknown, AddTorrentByFileOptions>('/add-files', async (req,
           return res.status(200).json(response);
         }
       },
-      ({code, message}) => res.status(500).json({code, message}),
+      ({code, message}) => {
+        if (message.includes('hash already used by another')) {
+          return res.status(202);
+        } else {
+          return res.status(500).json({code, message});
+        }
+      },
     );
 });
 
